@@ -5,7 +5,9 @@ import {
   Text,
   TouchableHighlight,
   View,
-  NativeModules
+  NativeModules,
+  Alert,
+  Platform
 } from 'react-native';
 
 import TouchID from 'react-native-touch-id'
@@ -76,10 +78,21 @@ export default class FingerPrint extends Component<{}> {
   function authenticate() {
     return TouchID.authenticate()
       .then(success => {
-        AlertIOS.alert('Authenticated Successfully');
+        if(Platform.OS === 'ios'){
+          console.log("authenticate -> success IOS", success)
+          // AlertIOS.alert('Success!', 'Authentication is successful!');
+          Alert.alert('Authenticated Successfully!');
+        }else if (Platform.OS === 'android'){
+          console.log("authenticate -> success Android", success)
+          Alert.alert('Authenticated Successfully!');
+        }
       })
       .catch(error => {
-        console.log(error)
-        AlertIOS.alert(error.message);
+        console.log('error authenticating: ',error)
+        if(Platform.OS === 'ios'){
+          AlertIOS.alert('Authentication Error');
+        }else if (Platform.OS === 'android'){
+          Alert.alert('Authentication Error!');
+        }
       });
   }
